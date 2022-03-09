@@ -1,0 +1,20 @@
+<!-- header bar with icon -->
+<%= render "shared/notifications_header", i18n_namespace: t("notifications.index.title"), image: "bell-solid" %>
+
+<div class="row margin-bottom">
+  <div class="small-12 column">
+
+    <ul class="menu simple clear">
+      <li>
+        <%= link_to t("notifications.index.unread"), notifications_path %>
+      </li>
+      <li class="is-active">
+        <h2><%= link_to t("notifications.index.read"), read_notifications_path %></h2>
+      </li>
+    </ul>
+
+    <ul class="no-bullet clear notifications-list">
+      <%= render @notifications %>
+    </ul>
+  </div>
+</div>

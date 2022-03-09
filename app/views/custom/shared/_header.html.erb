@@ -1,0 +1,183 @@
+
+<style>
+/* Dropdown Button */
+
+/* The search field */
+#myInput {
+  box-sizing: border-box;
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 20px;
+  padding: 14px 20px 12px 45px;
+  max-width: 46.75%;
+  border: 1px solid #cacaca;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+/* The search field when it gets focus/clicked on */
+#myInput:focus {outline: 3px solid #ddd;}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdowns {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdowns-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 330px;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdowns-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdowns-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+.style_image 
+{
+  width: 45%;
+  height: 25%;
+  margin-top: 11.5%;
+}
+
+.style_image1 
+{
+  width: 40%;
+  height: 20%;
+  margin-top: 8%;
+}
+
+.style_image2 
+{
+  width: 30%;
+  margin-top: 3%;
+}
+
+.style_image3 {
+  width: 35%;
+  margin-top: 5%;
+}
+
+.form
+{
+  width: 8vw;
+}
+</style>
+
+<!-- Welcome and dropdown search with filter -->
+<% if header.present? %>
+  <div class="header-card jumbo highlight">
+    <div class="row">
+      <div style="width: 50%; height: 60%; display: inline;"class="small-12 medium-6 column <%= "medium-9 small-centered text-center" unless header.image.present? %>">
+
+        <span style="margin-left:2px; font-size:x-large"><%= t("layouts.header.welcome") %></span>
+        <h1>Democy Labs</h1>
+
+        
+        <%= form_tag(search_path, :method => "get") do %>
+        <div class="input-group" style="width: 22vw;">
+          <%= select_tag "selected_param", options_for_select([ [t("layouts.header.search_all"),"All"],[t("layouts.header.search_plz"),"Postal Codes"], [t("layouts.header.proposals"),"Proposals"], [t("layouts.header.fellowships"),"Groups" ]], "All")%>
+         
+
+          <%= search_field_tag :search, params[:search], placeholder: t("layouts.header.search_placeholder"), class: "form-control" %>
+
+          <div class="input-group-btn">
+            <%= button_tag t("layouts.header.search_button_search"), :class => 'button glyphicon glyphicon-search', :name => nil %>
+
+          </div>
+        </div>  
+      <% end %>
+      </div>
+
+      
+
+      <!--<div class="input-group mb-3">
+        <select class="form-select-dark" aria-label="Default select example" style="width: 8vw;">
+          <option selected>All</option>
+          <option value="1">Postal Codes</option>
+          <option value="2">Proposals</option>
+          <option value="3">Groups</option>
+        </select>
+        <input type="text" placeholder="Search here..." id="myInput" onkeyup="filterFunction()" style="background-color: white;"></input>
+        <div id="myDropdowns" class="dropdowns-content" style="margin-left: 11%; margin-top: 3.5%;">
+          <a class="dropdown-item1">97461</a></li>
+          <a class="dropdown-item2">97424</a></li>
+          <a class="dropdown-item3">97421</a></li>
+          <a class="dropdown-item4">97422</a></li>
+          <a class="dropdown-item5">34125</a></li>
+          <a class="dropdown-item6">34117</a></li>
+          <a class="dropdown-item7">34119</a></li>
+        </div>
+        <div style="float:inline-end; height: 333px;width: 333px; margin-left: 38%; margin-bottom: 5%;">
+          <%= image_tag(image_path_for("Welcome_Logo.png"), alt: setting["org_name"])%>
+        </div>-->
+      
+
+      <table style="height: fit-content; display: inline; width: 50%; background-color: #f3f3f7;">  
+        <tbody>
+          <tr>
+            <td style='width: 15%;height: 15%;text-align: center; background-color: #f3f3f7;'>
+                <a href="fellowships" style="display: inline; width: 15%; height: 5%;margin-top: 5%;"><%= image_tag(image_path_for("users-solid.png"), :class=>"style_image")%></a>
+                <h4 style="text-align: center; margin-top: 3%;"><a href="fellowships" style="color: black; text-decoration: none;"><%= t("layouts.header.fellowships") %></a></h4>
+            </td>
+            <td style='width: 15%;height: 15%;text-align: center; background-color: #f3f3f7;'>
+                <a href="debates" style="display: inline; width: 25%; height: 5%;margin-top: 5%;"><%= image_tag(image_path_for("comment-dots-solid.png"), :class=>"style_image1")%></a>
+                <h4 style="text-align: center;"><a href="debates" style="color: black; text-decoration: none;"><%= t("layouts.header.debates") %></a></h4>
+            </td>  
+          </tr>
+          <tr>
+            <td style='width: 15%;height: 15%;text-align: center; background-color: #f3f3f7;';>
+                <a href="proposals"><%= image_tag(image_path_for("lightbulb-solid.png"), :class=>"style_image2")%></a>
+                <h4 style="text-align: center;margin-top: 2%;"><a href="proposals" style="color: black; text-decoration: none;"><%= t("layouts.header.proposals") %></a></h4>
+            </td>
+            <td style='width: 15%; height: 15%; text-align: center; background-color: #f3f3f7;'>
+                <a href="polls"><%=image_tag(image_path_for("circle-check-solid.png"), :class=>"style_image3")%></a>
+                <h4 style="text-align: center; margin-top: 2.5%; "><a href="polls" style="color: black; text-decoration: none;"><%= t("layouts.header.poll_questions") %></a></h4>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+    </div>
+  </div>
+  <div class="background-header"></div>
+<% end %>
+
+<script>
+  function mySearch() {
+  }
+  
+  function filterFunction() {
+  document.getElementById("myDropdowns").classList.toggle("show");
+  var input, filter, ul, li, a, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  div = document.getElementById("myDropdowns");
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
+</script>
+
+

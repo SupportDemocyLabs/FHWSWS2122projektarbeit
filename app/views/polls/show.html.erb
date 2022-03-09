@@ -1,0 +1,380 @@
+<%= provide :title, t("social_share.polls_show.title_#{@poll.id}", default: @poll.title) %>
+<%= provide :meta_description, t("social_share.polls_show.description_#{@poll.id}", default: @poll.title) %>
+<%= provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+              social_url: poll_url,
+              social_title: t("social_share.polls_show.title_#{@poll.id}", default: @poll.title),
+              social_description: t("social_share.polls_show.facebook_#{@poll.id}", default: @poll.title),
+              twitter_image_url:  "social_media_polls_twitter.jpg",
+              og_image_url: "social_media_polls.jpg" %>
+<% end %>
+
+  <!-- Abfrage ob Poll eine Fellowship ID besitzt -->
+    <% if @poll.fellowship_id.present? %>
+      <% @fellowship = Fellowship.find(@poll.fellowship_id) %>
+      <!-- Aktuelle Nutzer Rolle checken -->
+      <% if current_user %>
+        <% @fellowship.fellowship_users.each do |fellowship_user| %>
+          <% if fellowship_user.fellowship_id == @fellowship.id &&  fellowship_user.user_id == current_user.id %>
+            <% @is_fellowship_member = true %>
+            <% if fellowship_user.is_fellowship_owner %>
+              <% @currentuser_owner = true %>
+            <% elsif fellowship_user.is_fellowship_administrator %>
+              <% currentuser_admin = true %>
+            <% elsif fellowship_user.is_fellowship_moderator %>
+              <% currentuser_mod = true %>
+            <% end %>
+            <% break %>
+          <% end %>
+        <% end %>
+      <!-- ------------------------------->
+
+      <!-- Aktueller Nutzer Anforderungen prüfen -->
+      <% if @currentuser_admin || @currentuser_mod || @currentuser_owner %>
+        <% if (@fellowship.admin_required_full_name? && current_user.first_name.present? && current_user.last_name.present?) %>
+        <% elsif @fellowship.admin_required_full_name? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_required_phone_number? && current_user.phone_number.present?) %>
+        <% elsif @fellowship.admin_required_phone_number? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_required_gender? && current_user.gender.present?) %>
+        <% elsif @fellowship.admin_required_gender? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_required_date_of_birth? && current_user.date_of_birth.present?) %>
+        <% elsif @fellowship.admin_required_date_of_birth? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_required_address? && current_user.street.present? && current_user.housenumber.present?) %>
+        <% elsif @fellowship.admin_required_address? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_required_state? && current_user.state.present?) %>
+        <% elsif @fellowship.admin_required_state? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_required_city? && current_user.city.present?) %>
+        <% elsif @fellowship.admin_required_city? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_required_country? && current_user.country.present?) %>
+        <% elsif (@fellowship.admin_required_country?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+
+        <% if (@fellowship.admin_public_show_full_name? && current_user.public_profile_show_full_name? && current_user.first_name.present? && current_user.last_name.present?) %>
+        <% elsif (@fellowship.admin_public_show_full_name?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_public_show_gender? && current_user.public_profile_show_gender? && current_user.gender.present?) %>
+        <% elsif (@fellowship.admin_public_show_gender?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_public_show_phone_number? && current_user.public_profile_show_phone_number? && current_user.phone_number.present?) %>
+        <% elsif (@fellowship.admin_public_show_phone_number?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_public_show_date_of_birth? && current_user.public_profile_show_date_of_birth? && current_user.date_of_birth.present?) %>
+        <% elsif (@fellowship.admin_public_show_date_of_birth?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_public_show_state? && current_user.public_profile_show_state? && current_user.state.present?) %>
+        <% elsif (@fellowship.admin_public_show_state?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_public_show_city? && current_user.public_profile_show_city? && current_user.city.present?) %>
+        <% elsif @fellowship.admin_public_show_city? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.admin_public_show_country? && current_user.public_profile_show_country? && current_user.country.present?) %>
+        <% elsif @fellowship.admin_public_show_country? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+
+      <% else %>
+
+        <% if (@fellowship.user_required_full_name? && current_user.first_name.present? && current_user.last_name.present?) %>
+        <% elsif @fellowship.user_required_full_name? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_required_phone_number? && current_user.phone_number.present?) %>
+        <% elsif @fellowship.user_required_phone_number? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_required_gender? && current_user.gender.present?) %>
+        <% elsif @fellowship.user_required_gender? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_required_date_of_birth? && current_user.date_of_birth.present?) %>
+        <% elsif @fellowship.user_required_date_of_birth? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_required_adress? && current_user.street.present? && current_user.housenumber.present?) %>
+        <% elsif @fellowship.user_required_adress? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_required_state? && current_user.state.present?) %>
+        <% elsif @fellowship.user_required_state? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_required_city? && current_user.city.present?) %>
+        <% elsif @fellowship.user_required_city? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_required_country? && current_user.country.present?) %>
+        <% elsif (@fellowship.user_required_country?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+
+        <% if (@fellowship.user_public_show_full_name? && current_user.public_profile_show_full_name? && current_user.first_name.present? && current_user.last_name.present?) %>
+        <% elsif (@fellowship.user_public_show_full_name?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_public_show_gender? && current_user.public_profile_show_gender? && current_user.gender.present?) %>
+        <% elsif (@fellowship.user_public_show_gender?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_public_show_phone_number? && current_user.public_profile_show_phone_number? && current_user.phone_number.present?) %>
+        <% elsif (@fellowship.user_public_show_phone_number?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_public_show_date_of_birth? && current_user.public_profile_show_date_of_birth? && current_user.date_of_birth.present?) %>
+        <% elsif (@fellowship.user_public_show_date_of_birth?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_public_show_state? && current_user.public_profile_show_state? && current_user.state.present?) %>
+        <% elsif (@fellowship.user_public_show_state?) %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_public_show_city? && current_user.public_profile_show_city? && current_user.city.present?) %>
+        <% elsif @fellowship.user_public_show_city? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+        <% if (@fellowship.user_public_show_country? && current_user.public_profile_show_country? && current_user.country.present?) %>
+        <% elsif @fellowship.user_public_show_country? %>
+          <% @currentuser_allowed_action = false %>
+        <% end %>
+      <% end %>
+      <% end %>  
+    <% end %>  
+    <!-- ENDE Anforderungen pürfen -->
+
+<div class="polls-show">
+  <%= render "poll_header" %>
+
+  <%= render "poll_subnav" %>
+
+  <div class="row margin">
+    <div class="small-12 medium-9 column">
+      <%= render "callout" %>
+
+      <% if @poll.voted_in_booth?(current_user) %>
+        <div class="callout warning">
+          <%= t("polls.show.already_voted_in_booth") %>
+        </div>
+      <% else %>
+
+        <% if current_user && @poll.voted_in_web?(current_user) && !@poll.expired? %>
+          <div class="callout warning">
+            <%= t("polls.show.already_voted_in_web") %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <% @questions.each do |question| %>
+        <%= render "polls/questions/question", question: question, token: @token %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="expanded poll-more-info">
+    <div class="row margin">
+      <div class="small-12 medium-9 column">
+        <h3><%= t("polls.show.more_info_title") %></h3>
+        <%= auto_link_already_sanitized_html simple_format(@poll.description) %>
+      </div>
+    </div>
+  </div>
+  <div id="poll_more_info_answers" class="expanded poll-more-info-answers">
+    <div class="row padding">
+      <% @poll_questions_answers.each do |answer| %>
+        <div class="small-12 medium-6 column end answer <%= cycle("first", "") %>" id="answer_<%= answer.id %>" style="width: 50%; height: 66%">
+          <h3><%= answer.title %></h3>
+
+          <% if answer.images.any? %>
+            <%= render "gallery", answer: answer %>
+          <% end %>
+
+          <% if answer.description.present? %>
+            <div class="margin-top">
+              <div id="answer_description_<%= answer.id %>" class="answer-description short" data-toggler="short">
+                <%= wysiwyg(answer.description) %>
+              </div>
+              <div class="read-more">
+                <button type="button" id="read_more_<%= answer.id %>"
+                   data-toggle="answer_description_<%= answer.id %> read_more_<%= answer.id %> read_less_<%= answer.id %>"
+                   data-toggler="hide">
+                  <%= t("polls.show.read_more", answer: answer.title) %>
+                </button>
+                <button type="button" id="read_less_<%= answer.id %>"
+                   data-toggle="answer_description_<%= answer.id %> read_more_<%= answer.id %> read_less_<%= answer.id %>"
+                   data-toggler="hide"
+                   class="hide">
+                  <%= t("polls.show.read_less", answer: answer.title) %>
+                </button>
+              </div>
+            </div>
+          <% end %>
+
+          <% if answer.documents.present? %>
+            <div class="document-link">
+              <p>
+                <span class="icon-document"></span>&nbsp;
+                <strong><%= t("polls.show.documents") %></strong>
+              </p>
+
+              <% answer.documents.each do |document| %>
+                  <%= link_to document.title,
+                              document.attachment.url,
+                              target: "_blank",
+                              rel: "nofollow" %><br>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if answer.videos.present? %>
+            <div class="video-link">
+              <p>
+                <span class="icon-video"></span>&nbsp;
+                <strong><%= t("polls.show.videos") %></strong>
+              </p>
+
+              <% answer.videos.each do |video| %>
+                  <%= link_to video.title,
+                              video.url,
+                              target: "_blank",
+                              rel: "nofollow" %><br>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="tabs-content" data-tabs-content="polls_tabs">
+    <%= render "filter_subnav" %>
+
+    <!-- Pro / Kontra -->
+    <h3><details style="position:relative; margin-bottom: 2.5%;">
+      <summary><%= t("activerecord.attributes.proscons.proscons") %></summary>
+      <div style="float:left; width:45%; margin-left: 5%;">
+        <h3 style="float:center; text-decoration:underline;"> <%= t("activerecord.attributes.proscons.pros") %></h3>
+        <%if @polls_pro_contra.blank?%>
+          <% @polls_pro_contra = []%>
+        <%end%>
+        <% @polls_pro_contra.each do |pc| %>
+          <% if pc.pc == 1%>
+            <%= pc.user_first_name %><%= " " %> <%= pc.user_last_name %>
+            <p>
+              <strong><%= t("activerecord.attributes.proscons.tag") %></strong>
+              <%= pc.tag %>
+            </p>
+            <p>
+              <strong><%= t("activerecord.attributes.proscons.body") %></strong>
+              <%= pc.body %>
+            </p>
+            <p>
+              <strong><%= t("activerecord.attributes.proscons.source") %></strong>
+              <%= pc.sources %>
+            </p>
+            <% if (user_signed_in? && @is_fellowship_member && @poll.fellowship_id.present? && @currentuser_allowed_action) || (user_signed_in? && !@poll.fellowship_id.present?)  %>
+            <a href="/pro_contras/<%=pc.id.to_s%>" class="button hollow"><%=t("activerecord.attributes.proscons.show")%> (<%= pc.objections.all.count %>)</a><br>
+            <% end %>  
+          <% end %>
+      
+        <% end %>
+      
+        <br>
+      </div>
+      <div style="float:right; width:50%;">
+        <h3 style="float:center; text-decoration:underline;"> <%= t("activerecord.attributes.proscons.cons") %></h3>
+        <%if @polls_pro_contra.blank?%>
+          <% @polls_pro_contra = []%>
+        <%end%>
+        <% @polls_pro_contra.each do |pc| %>
+          <% if pc.pc == 0%>
+            <%= pc.user_first_name %><%= " " %> <%= pc.user_last_name %>
+            <p>
+              <strong><%= t("activerecord.attributes.proscons.tag") %></strong>
+              <%= pc.tag %>
+            </p>
+            <p>
+              <strong><%= t("activerecord.attributes.proscons.body") %></strong>
+              <%= pc.body %>
+            </p>
+            <p>
+              <strong><%= t("activerecord.attributes.proscons.source") %></strong>
+              <%= pc.sources %>
+            </p>
+            <% if (user_signed_in? && @is_fellowship_member && @poll.fellowship_id.present? && @currentuser_allowed_action) || (user_signed_in? && !@poll.fellowship_id.present?)  %>
+            <a href="/pro_contras/<%=pc.id.to_s%>" class="button hollow"><%=t("activerecord.attributes.proscons.show")%> (<%= pc.objections.all.count %>)</a><br>
+            <% end %>  
+          <% end %>
+      
+        <% end %>
+      </div>
+      
+      <% if (user_signed_in? && @is_fellowship_member && @poll.fellowship_id.present? && @currentuser_allowed_action) || (user_signed_in? && !@poll.fellowship_id.present?)  %>
+      <h3><details style="position:relative; margin-bottom: 2.5%;">
+      <summary><%= t("activerecord.attributes.proscons.new") %></summary>
+      <div style="float:center; margin-left: 5%; margin-right: 5%;">
+          <%= form_for([@poll, @poll.pro_contras.build]) do |f| %>
+            <p>
+              <%= f.text_field :tag , label: t("activerecord.attributes.proscons.tag") %>
+            </p>
+            <p>
+              <%= f.text_area :body , label: t("activerecord.attributes.proscons.body")%>
+            </p>
+            <p>
+              <%= f.text_area :sources , label: t("activerecord.attributes.proscons.source") %>
+            </p>
+          
+            <%if current_user.present? %>
+              <p>
+                <%= f.hidden_field :user_id, :value => current_user.id, :readonly => true%>
+                <%= f.hidden_field :user_first_name, :value => current_user.first_name, :readonly => true%>
+                <%= f.hidden_field :user_last_name, :value => current_user.last_name, :readonly => true%>
+              </p>
+            <%else%>
+              <p>
+                <%= f.hidden_field :user_id, :value => "1", :readonly => true%>
+                <%= f.hidden_field :user_first_name, :value => "Anonymous", :readonly => true%>
+              </p>
+            <%end%>
+            <p>
+              <%= f.select(:pc, [[t("activerecord.attributes.proscons.pro"), 1], [t("activerecord.attributes.proscons.con"), 0]], label: t("activerecord.attributes.proscons.type")) %>
+            </p>
+            <p>
+              <%= f.submit t("activerecord.attributes.proscons.create_new")%>
+            </p>
+          <% end %>
+        </div>
+        <%end%> 
+      <div style="clear: both;"></div>
+    </details></h3> 
+    </details></h3>    
+
+    <div class="tabs-panel is-active" id="tab-comments">
+      <%= render "comments" %>
+    </div>
+  </div>
+
+  <style>
+    .poll-more-info-answers .answer-description.short
+    {
+        height:fit-content;
+    }
+  </style>

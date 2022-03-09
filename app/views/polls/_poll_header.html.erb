@@ -1,0 +1,48 @@
+<div class="expanded no-margin-top polls-show-header">
+  <div class="row">
+    <div class="small-12 medium-9 column padding">
+      <% if @poll.related.nil? %>
+        <%= back_link_to polls_path, t("polls.show.back"), class: "button back" %>
+      <% else %>
+        <%= link_to t("polls.poll_header.back_to_proposal"), [@poll.related], class: "button back" %>
+      <% end %>
+
+<% if @poll.fellowship_id.present? %>
+        <% @fellowship= Fellowship.find(@poll.fellowship_id)%>
+      <% end %>
+
+      <% if @poll.fellowship_id.present? %>
+              <div><h1>
+                <% if @fellowship.image.attached? %>
+                  <img src="<%= (url_for(@fellowship.image)) %>" width=" 3%" height= "3%" style= "margin-bottom: 1%;">
+                <% end %>       
+                <%= link_to @fellowship.name, @fellowship %>
+              </h1></div> 
+        <% end %>   
+
+      <h1><%= @poll.name %></h1>
+
+      <%= auto_link_already_sanitized_html simple_format(@poll.summary) %>
+
+      <% if @poll.geozones.any? %>
+        <ul class="margin-top tags">
+          <% @poll.geozones.each do |g| %>
+            <li><span><%= g.name %></span></li>
+          <% end %>
+        </ul>
+      <% end %>
+      <%= render SDG::TagListComponent.new(@poll, linkable: false) %>
+    </div>
+
+ <div style="display: none;">
+    <aside class="small-12 medium-3 column margin-top">
+      <%= render "shared/social_share",
+        share_title: t("shared.share"),
+        title: @poll.name,
+        url: poll_url(@poll),
+        description: @poll.name,
+        mobile: @poll.name %>
+    </aside>
+  </div>
+</div>
+</div>
